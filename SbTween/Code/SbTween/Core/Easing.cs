@@ -8,50 +8,158 @@ namespace SbTween;
 public enum EaseType
 {
 	Linear,
+	InSine,
+	OutSine,
+	InOutSine,
 	InQuad,
 	OutQuad,
 	InOutQuad,
 	InCubic,
 	OutCubic,
+	InOutCubic,
+	InQuart,
+	OutQuart,
+	InOutQuart,
+	InQuint,
+	OutQuint,
+	InOutQuint,
+	InExpo,
+	OutExpo,
+	InOutExpo,
+	InCirc,
+	OutCirc,
+	InOutCirc,
 	InElastic,
 	OutElastic,
+	InOutElastic,
+	InBack,
+	OutBack,
+	InOutBack,
 	InBounce,
-	OutBounce
+	OutBounce,
+	InOutBounce,
 }
 
 public static class Easing
 {
-	public static float Apply( EaseType type, float t )
+	public static float Apply(EaseType type, float t)
 	{
 		return type switch
 		{
-			EaseType.Linear => t,
-			EaseType.InQuad => t * t,
-			EaseType.OutQuad => t * (2 - t),
-			EaseType.InOutQuad => t < 0.5f ? 2 * t * t : -1 + (4 - 2 * t) * t,
-			EaseType.InCubic => t * t * t,
-			EaseType.OutCubic => 1 - MathF.Pow( 1 - t, 3 ),
-
-			// Elastic
-			EaseType.InElastic => -MathF.Pow( 2, 10 * t - 10 ) * MathF.Sin( (t * 10 - 10.75f) * ((2 * MathF.PI) / 3) ),
-			EaseType.OutElastic => MathF.Pow( 2, -10 * t ) * MathF.Sin( (t * 10 - 0.75f) * ((2 * MathF.PI) / 3) ) + 1,
-
-			// Bounce
-			EaseType.InBounce => 1 - Apply( EaseType.OutBounce, 1 - t ),
-			EaseType.OutBounce => OutBounce( t ),
-
+			EaseType.Linear => Sandbox.Utility.Easing.Linear(t),
+			EaseType.InSine => Sandbox.Utility.Easing.SineEaseIn(t),
+			EaseType.OutSine => Sandbox.Utility.Easing.SineEaseOut(t),
+			EaseType.InOutSine => Sandbox.Utility.Easing.SineEaseInOut(t),
+			EaseType.InQuad => Sandbox.Utility.Easing.QuadraticIn(t),
+			EaseType.OutQuad => Sandbox.Utility.Easing.QuadraticOut(t),
+			EaseType.InOutQuad => Sandbox.Utility.Easing.QuadraticInOut(t),
+			EaseType.InCubic => InCubic(t),
+			EaseType.OutCubic => OutCubic(t),
+			EaseType.InOutCubic => InOutCubic(t),
+			EaseType.InQuart => InQuart(t),
+			EaseType.OutQuart => OutQuart(t),
+			EaseType.InOutQuart => InOutQuart(t),
+			EaseType.InQuint => InQuint(t),
+			EaseType.OutQuint => OutQuint(t),
+			EaseType.InOutQuint => InOutQuint(t),
+			EaseType.InExpo => Sandbox.Utility.Easing.ExpoIn(t),
+			EaseType.OutExpo => Sandbox.Utility.Easing.ExpoOut(t),
+			EaseType.InOutExpo => Sandbox.Utility.Easing.ExpoInOut(t),
+			EaseType.InCirc => InCirc(t),
+			EaseType.OutCirc => OutCirc(t),
+			EaseType.InOutCirc => InOutCirc(t),
+			EaseType.InElastic => InElastic(t),
+			EaseType.OutElastic => OutElastic(t),
+			EaseType.InOutElastic => InOutElastic(t),
+			EaseType.InBack => InBack(t),
+			EaseType.OutBack => OutBack(t),
+			EaseType.InOutBack => InOutBack(t),
+			EaseType.InBounce => Sandbox.Utility.Easing.BounceIn(t),
+			EaseType.OutBounce => Sandbox.Utility.Easing.BounceOut(t),
+			EaseType.InOutBounce => Sandbox.Utility.Easing.BounceInOut(t),
 			_ => t
 		};
 	}
 
-	private static float OutBounce( float t ) // shoutout my boy Robert Penner, he smart.
-	{
-		const float n1 = 7.5625f;
-		const float d1 = 2.75f;
+	private static float InCubic(float f) => f * f * f;
 
-		if ( t < 1 / d1 ) return n1 * t * t;
-		if ( t < 2 / d1 ) return n1 * (t -= 1.5f / d1) * t + 0.75f;
-		if ( t < 2.5f / d1 ) return n1 * (t -= 2.25f / d1) * t + 0.9375f;
-		return n1 * (t -= 2.625f / d1) * t + 0.984375f;
+	private static float OutCubic(float f) => 1 - MathF.Pow(1 - f, 3);
+
+	private static float InOutCubic(float f) => f < 0.5f ? 4 * f * f * f : 1 - MathF.Pow(-2 * f + 2, 3) / 2;
+
+	private static float InQuart(float f) => f * f * f * f;
+
+	private static float OutQuart(float f) => 1 - MathF.Pow(1 - f, 4);
+
+	private static float InOutQuart(float f) => f < 0.5 ? 8 * f * f * f * f : 1 - MathF.Pow(-2 * f + 2, 4) / 2;
+
+	private static float InQuint(float f) => f * f * f * f * f;
+
+	private static float OutQuint(float f) => 1 - MathF.Pow(1 - f, 5);
+
+	private static float InOutQuint(float f) => f < 0.5f ? 16 * f * f * f * f * f : 1 - MathF.Pow(-2 * f + 2, 5) / 2;
+
+	private static float InCirc(float f) => 1 - MathF.Sqrt(1 - MathF.Pow(f, 2));
+
+	private static float OutCirc(float f) => MathF.Sqrt(1 - MathF.Pow(f - 1, 2));
+
+	private static float InOutCirc(float f)
+	{
+		return f < 0.5 ?
+			(1 - MathF.Sqrt(1 - MathF.Pow(2 * f, 2))) / 2 :
+			(MathF.Sqrt(1 - MathF.Pow(-2 * f + 2, 2)) + 1) / 2;
+	}
+
+	private static float InElastic(float f)
+	{
+		const float c4 = 2 * MathF.PI / 3;
+
+		return f == 0 ? 0 :
+			f == 1 ? 1 :
+			-MathF.Pow(2, 10 * f - 10) * MathF.Sin((f * 10 - 10.75f) * c4);
+	}
+
+	private static float OutElastic(float f)
+	{
+		const float c4 = 2 * MathF.PI / 3;
+
+		return f == 0 ? 0 :
+			f == 1 ? 1 :
+			MathF.Pow(2, -10 * f) * MathF.Sin((f * 10 - 0.75f) * c4) + 1;
+	}
+
+	private static float InOutElastic(float f)
+	{
+		const float c5 = 2 * MathF.PI / 4.5f;
+
+		return f == 0 ? 0 :
+			f == 1 ? 1 :
+			f < 0.5f ?
+			-(MathF.Pow(2, 20 * f - 10) * MathF.Sin((20 * f - 11.125f) * c5)) / 2 :
+			MathF.Pow(2, -20 * f + 10) * MathF.Sin((20 * f - 11.125f) * c5) / 2 + 1;
+	}
+
+	private static float InBack(float f)
+	{
+		const float c1 = 1.70158f;
+		const float c3 = c1 + 1;
+		return c3 * f * f * f - c1 * f * f;
+	}
+
+	private static float OutBack(float f)
+	{
+		const float c1 = 1.70158f;
+		const float c3 = c1 + 1;
+		return 1 + c3 * MathF.Pow(f - 1, 3) + c1 * MathF.Pow(f - 1, 2);
+	}
+
+	private static float InOutBack(float f)
+	{
+		const float c1 = 1.70158f;
+		const float c2 = c1 * 1.525f;
+
+		return f < 0.5f
+			? MathF.Pow(2 * f, 2) * ((c2 + 1) * 2 * f - c2) / 2
+			: (MathF.Pow(2 * f - 2, 2) * ((c2 + 1) * (f * 2 - 2) + c2) + 2) / 2;
 	}
 }
